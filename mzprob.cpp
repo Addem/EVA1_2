@@ -11,7 +11,6 @@ mzProb::mzProb(QWidget *parent) :
     ui(new Ui::mzProb)
 {
     ui->setupUi(this);
-
 }
 
 
@@ -23,6 +22,11 @@ mzProb::~mzProb()
 
 void mzProb::on_pushButton_4_clicked()
 {
+    this->ui->groupBox->setEnabled(false);
+    this->ui->enter->setEnabled(false);
+    this->ui->exit->setEnabled(false);
+    this->ui->fromBoToLeft->setEnabled(false);
+    this->ui->fromRighttoBo->setEnabled(false);
     lmCount = 0;
     bmCount = 0;
     rmCount = 0;
@@ -50,8 +54,8 @@ void mzProb::on_pushButton_4_clicked()
 
 void mzProb::on_enter_clicked()
 {
-    QString KvM = this->ui->lst_left->currentItem()->text();
 
+    QString KvM = this->ui->lst_left->currentItem()->text();
     int bCount = this->ui->lst_boat->count();
     int kValue = this->ui->k->value();
     if(KvM == M){
@@ -60,8 +64,9 @@ void mzProb::on_enter_clicked()
     }else{
         ++bhCount;
         --lhCount;
-
     }
+
+
     if(bCount < kValue && (lmCount == 0 || lmCount >= lhCount) && (bmCount >= bhCount || bmCount == 0)){ //feltétel, hogy a klikk után nem lesz több K mint M
        this->ui->lst_boat->addItem(this->ui->lst_left->currentItem()->clone());
        delete this->ui->lst_left->currentItem();
@@ -86,6 +91,7 @@ void mzProb::on_enter_clicked()
     this->ui->lcdNumber_4->display(bhCount);
     this->ui->lcdNumber_5->display(rmCount);
     this->ui->lcdNumber_6->display(rhCount);
+    if (this->ui->lst_left->count() == 0) this->ui->enter->setEnabled(false);
 
 
 }
@@ -141,6 +147,10 @@ void mzProb::on_exit_clicked()
     this->ui->lcdNumber_4->display(bhCount);
     this->ui->lcdNumber_5->display(rmCount);
     this->ui->lcdNumber_6->display(rhCount);
+    if (this->ui->lst_boat->count()==0){
+        this->ui->fromBoToLeft->setEnabled(false);
+        this->ui->exit->setEnabled(false);
+    }
 
 }
 
@@ -183,6 +193,10 @@ void mzProb::on_fromBoToLeft_clicked()
     this->ui->lcdNumber_4->display(bhCount);
     this->ui->lcdNumber_5->display(rmCount);
     this->ui->lcdNumber_6->display(rhCount);
+    if (this->ui->lst_boat->count()==0){
+        this->ui->fromBoToLeft->setEnabled(false);
+        this->ui->exit->setEnabled(false);
+    }
 
 }
 
@@ -226,5 +240,37 @@ void mzProb::on_fromRighttoBo_clicked()
     this->ui->lcdNumber_4->display(bhCount);
     this->ui->lcdNumber_5->display(rmCount);
     this->ui->lcdNumber_6->display(rhCount);
+    if (this->ui->lst_right->count() == 0) this->ui->fromRighttoBo->setEnabled(false);
+}
 
+void mzProb::on_surrender_clicked()
+{
+    this->ui->groupBox->setEnabled(true);
+    counter = 0;
+    this->ui->lst_left->clear();
+    this->ui->lst_boat->clear();
+    this->ui->lst_right->clear();
+    this->ui->Display->display(0);
+}
+
+void mzProb::on_lst_left_pressed(const QModelIndex &index)
+{
+    this->ui->lst_left->count() == 0 ? this->ui->enter->setEnabled(false) : this->ui->enter->setEnabled(true);
+}
+
+
+void mzProb::on_lst_boat_pressed(const QModelIndex &index)
+{
+    if (this->ui->lst_boat->count() == 0){
+        this->ui->exit->setEnabled(false);
+        this->ui->fromBoToLeft->setEnabled(false);
+    }else{
+        this->ui->exit->setEnabled(true);
+        this->ui->fromBoToLeft->setEnabled(true);
+    }
+}
+
+void mzProb::on_lst_right_pressed(const QModelIndex &index)
+{
+    this->ui->lst_right->count() == 0 ? this->ui->fromRighttoBo->setEnabled(false) : this->ui->fromRighttoBo->setEnabled(true);
 }

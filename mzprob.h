@@ -27,6 +27,14 @@ private slots:
 
     void on_fromRighttoBo_clicked();
 
+    void on_surrender_clicked();
+
+    void on_lst_left_pressed(const QModelIndex &index);
+
+    void on_lst_boat_pressed(const QModelIndex &index);
+
+    void on_lst_right_pressed(const QModelIndex &index);
+
 private:
     Ui::mzProb *ui;
     int counter;
